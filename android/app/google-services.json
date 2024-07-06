@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "105894020552",
+    "project_id": "connecthub-7c7cf",
+    "storage_bucket": "connecthub-7c7cf.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:105894020552:android:b83689ebe932966138ecfd",
+        "android_client_info": {
+          "package_name": "com.example.connecthub"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyACPKF1nWXorn4JiQv4t6nOicPD00OisYo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

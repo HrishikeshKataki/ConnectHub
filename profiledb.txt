@@ -1,0 +1,70 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
+class AuthService {
+  final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+
+  User? getCurrentUser() {
+    return _firebaseAuth.currentUser;
+  }
+}
+
+class DatabaseService {
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+  Future<void> updateUserData(
+      String freelancerId, Map<String, dynamic> data) async {
+    final firestore = FirebaseFirestore.instance;
+    final freelancerRef = firestore.collection('freelancers').doc(freelancerId);
+    await freelancerRef.update(data);
+  }
+
+  Future<List<Map<String, dynamic>>> getServicesData() async {
+    try {
+      List<Map<String, dynamic>> servicesData = [];
+
+      QuerySnapshot servicesSnapshot =
+          await _firestore.collection('Services').get();
+      for (var doc in servicesSnapshot.docs) {
+        Map<String, dynamic> serviceData = {
+          'title': doc.get('title'),
+          'description': doc.get('description'),
+          'price': doc.get('price'),
+          'included': List.from(doc.get('included')),
+          'user': doc.get('user'),
+        };
+        servicesData.add(serviceData);
+      }
+
+      return servicesData;
+    } catch (error) {
+      print('Error fetching services data: $error');
+      return [];
+    }
+  }
+
+  Future<Map<String, dynamic>> getUserData(String userId) async {
+    try {
+      Map<String, dynamic> userData = {};
+
+      // Fetch data from the 'freelancer' collection
+      DocumentSnapshot freelancerSnapshot =
+          await _firestore.collection('freelancer').doc(userId).get();
+      if (freelancerSnapshot.exists) {
+        userData.addAll(freelancerSnapshot.data() as Map<String, dynamic>);
+      }
+
+      // Fetch email from the 'users' collection
+      DocumentSnapshot userSnapshot =
+          await _firestore.collection('users').doc(userId).get();
+      if (userSnapshot.exists) {
+        userData['email'] = userSnapshot.get('email');
+      }
+
+      return userData;
+    } catch (error) {
+      print('Error fetching user data: $error');
+      return {};
+    }
+  }
+}
